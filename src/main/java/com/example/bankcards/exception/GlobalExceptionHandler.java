@@ -6,6 +6,7 @@ import com.example.bankcards.exception.request.RequestAlreadyApprovedException;
 import com.example.bankcards.exception.request.RequestAlreadyDeniedException;
 import com.example.bankcards.exception.request.RequestNotFoundException;
 import com.example.bankcards.exception.user.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException e) {
@@ -30,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
         ErrorResponse error = new ErrorResponse("INTERNAL_ERROR", "An unexpected error occurred");
+        log.info("Unexpected error: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
